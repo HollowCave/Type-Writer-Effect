@@ -1,4 +1,4 @@
-const TypeWriter = function (txtElement, words, wait = 3000) {
+const TypeWriter = function (txtElement, words, wait = 2000) {
   this.txtElement = txtElement;
   this.words = words;
   this.txt = '';
@@ -27,10 +27,28 @@ TypeWriter.prototype.type = function () {
   // Insert text into Element
   this.txtElement.innerHTML = `<span class="txt">${this.txt}</span>`;
 
-  // Type Speed
+  // Initial Type Speed
+  let typeSpeed = 300;
 
+  if (this.isDeleting) {
+    typeSpeed /= 2;
+  }
 
-  setTimeout(() => this.type(), 500)
+  // If Word is Complete
+  if (!this.isDeleting && this.txt === fullTxt) {
+    // Make Pause at End
+    typeSpeed = this.wait;
+    // Set Delete to True
+    this.isDeleting = true;
+  } else if (this.isDeleting && this.txt === '') {
+    this.isDeleting = false;
+    // Move to Next Word
+    this.wordIndex++;
+    // Pause Before Start Typing
+    typeSpeed = 500;
+  }
+
+  setTimeout(() => this.type(), typeSpeed)
 }
 
 // Init on DOM Load
